@@ -148,5 +148,6 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         glDrawArrays(GL_LINES, 14, 2);
         glDrawArrays(GL_LINES, 16, 2);
         glDrawArrays(GL_LINES, 18, 2);
+
     }
 }
