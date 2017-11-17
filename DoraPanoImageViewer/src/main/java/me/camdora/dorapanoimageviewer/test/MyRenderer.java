@@ -15,6 +15,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 import me.camdora.dorapanoimageviewer.R;
 import me.camdora.dorapanoimageviewer.data.VertexArray;
+import me.camdora.dorapanoimageviewer.programs.ColorShaderProgram;
 import me.camdora.dorapanoimageviewer.utils.MatrixHelper;
 import me.camdora.dorapanoimageviewer.utils.ShaderHelper;
 import me.camdora.dorapanoimageviewer.utils.TextResourceReader;
@@ -47,6 +48,8 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     private final VertexArray vertexArray;
     private final Context context;
     private int program;
+
+    private ColorShaderProgram colorShaderProgram;
 
     public MyRenderer(Context context){
         this.context = context;
@@ -88,7 +91,8 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        String vertexShaderSource = TextResourceReader
+
+        /*String vertexShaderSource = TextResourceReader
                 .readTextFileFromResource(context, R.raw.vertex_shader_simple);
         String fragmentShaderSource = TextResourceReader
                 .readTextFileFromResource(context, R.raw.fragment_shader_simple);
@@ -96,12 +100,20 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         int vertexShader = ShaderHelper.compileVertexShader(vertexShaderSource);
         int fragmentShader = ShaderHelper.compileFragmentShader(fragmentShaderSource);
 
-        program = ShaderHelper.linkProgram(vertexShader, fragmentShader);
-        glUseProgram(program);
+        program = ShaderHelper.linkProgram(vertexShader, fragmentShader);*/
+        //替换成
+        colorShaderProgram = new ColorShaderProgram(context);
 
-        aColorLocation = glGetAttribLocation(program, A_COLOR);
+        //glUseProgram(program);
+        //替换成
+        colorShaderProgram.useProgram();
+
+        /*aColorLocation = glGetAttribLocation(program, A_COLOR);
         aPositionLocation = glGetAttribLocation(program, A_POSITION);
-        uMatrixLocation = glGetUniformLocation(program, U_MATRIX);
+        uMatrixLocation = glGetUniformLocation(program, U_MATRIX);*/
+        //替换成
+        aColorLocation = colorShaderProgram.getColorAttributeLocation();
+        aPositionLocation = colorShaderProgram.getPositionAttributeLocation();
 
         vertexArray.setVertexAttribPointer(0,
                 aPositionLocation,
@@ -147,7 +159,9 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     public void onDrawFrame(GL10 gl) {
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUniformMatrix4fv(uMatrixLocation, 1, false, projectionMatrix, 0);
+        //glUniformMatrix4fv(uMatrixLocation, 1, false, projectionMatrix, 0);
+        //替换成
+        colorShaderProgram.setUniforms(projectionMatrix);
 
         //第一个三角形
         glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
