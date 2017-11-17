@@ -14,6 +14,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import me.camdora.dorapanoimageviewer.R;
+import me.camdora.dorapanoimageviewer.utils.MatrixHelper;
 import me.camdora.dorapanoimageviewer.utils.ShaderHelper;
 import me.camdora.dorapanoimageviewer.utils.TextResourceReader;
 
@@ -34,6 +35,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     private int uMatrixLocation;
 
     private final float[] projectionMatrix = new float[16];
+    private final float[] modelMatrix = new float[16];
 
     private static final int POSITION_COMPONENT_COUNT = 2;
     private static final int COLOR_COMPONENT_COUNT = 3;
@@ -119,6 +121,8 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     public void onSurfaceChanged(GL10 gl, int width, int height) {
         glViewport(0, 0, width,height);
 
+        //正交投影
+        /*
         final float aspectRatio = width > height ?
                 (float)width / (float)height :
                 (float)height / (float)width;
@@ -128,7 +132,20 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         }else {
             orthoM(projectionMatrix, 0, -1f, 1f,
                     -aspectRatio, aspectRatio, -1, 1f);
-        }
+        }*/
+
+        //透视投影
+        MatrixHelper.perspectiveM(projectionMatrix, 45,
+                (float) width / (float) height, 1f, 10);
+
+        setIdentityM(modelMatrix, 0);
+        translateM(modelMatrix, 0, 0f, 0f, -3f);
+        rotateM(modelMatrix, 0, -60f, 1f, 0f, 0f);
+
+        final float[] temp = new float[16];
+        multiplyMM(temp, 0, projectionMatrix, 0, modelMatrix, 0);
+        System.arraycopy(temp, 0, projectionMatrix, 0, temp.length);
+
     }
 
     @Override
