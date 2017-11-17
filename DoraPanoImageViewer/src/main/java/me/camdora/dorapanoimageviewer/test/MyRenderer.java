@@ -37,7 +37,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     private final float[] projectionMatrix = new float[16];
     private final float[] modelMatrix = new float[16];
 
-    private static final int POSITION_COMPONENT_COUNT = 2;
+    private static final int POSITION_COMPONENT_COUNT = 3;
     private static final int COLOR_COMPONENT_COUNT = 3;
     private static final int STRIDE =
             (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) *
@@ -52,33 +52,33 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
         float[] tableVertices = {
                 //第一个三角形
-                0f,0f,          0.8f,0.8f,0.8f,
-                -0.6f,-0.9f,    0.5f,0.5f,0.5f,
-                0.6f,-0.9f,     0.5f,0.5f,0.5f,
-                0.6f,0.9f,      0.5f,0.5f,0.5f,
-                -0.6f,0.9f,     0.5f,0.5f,0.5f,
-                -0.6f,-0.9f,    0.5f,0.5f,0.5f,
+                0f,0f,-0.2f,          0.8f,0.8f,0.8f,
+                -0.6f,-0.9f,-0.2f,    0.5f,0.5f,0.5f,
+                0.6f,-0.9f,-0.2f,     0.5f,0.5f,0.5f,
+                0.6f,0.9f,-0.2f,      0.5f,0.5f,0.5f,
+                -0.6f,0.9f,-0.2f,     0.5f,0.5f,0.5f,
+                -0.6f,-0.9f,-0.2f,    0.5f,0.5f,0.5f,
 
                 //第二个三角形
-                0f,0f,          1f,1f,1f,
-                -0.5f,-0.8f,    0.7f,0.7f,0.7f,
-                0.5f,-0.8f,     0.7f,0.7f,0.7f,
-                0.5f,0.8f,      0.7f,0.7f,0.7f,
-                -0.5f,0.8f,     0.7f,0.7f,0.7f,
-                -0.5f,-0.8f,    0.7f,0.7f,0.7f,
+                0f,0f,0f,          1f,1f,1f,
+                -0.5f,-0.8f,0f,    0.7f,0.7f,0.7f,
+                0.5f,-0.8f,0f,     0.7f,0.7f,0.7f,
+                0.5f,0.8f,0f,      0.7f,0.7f,0.7f,
+                -0.5f,0.8f,0f,     0.7f,0.7f,0.7f,
+                -0.5f,-0.8f,0f,    0.7f,0.7f,0.7f,
 
                 //连接线
-                -0.6f,-0.9f,    0.7f,0.7f,0.7f,
-                -0.5f,-0.8f,    1f,0f,0f,
+                -0.6f,-0.9f,-0.2f,    0.7f,0.7f,0.7f,
+                -0.5f,-0.8f,0f,    1f,0f,0f,
 
-                -0.6f,0.9f,     0.7f,0.7f,0.7f,
-                -0.5f,0.8f,     0f,1f,0f,
+                -0.6f,0.9f,-0.2f,     0.7f,0.7f,0.7f,
+                -0.5f,0.8f,0f,     0f,1f,0f,
 
-                0.6f,0.9f,      0.7f,0.7f,0.7f,
-                0.5f,0.8f,      0f,0f,1f,
+                0.6f,0.9f,-0.2f,      0.7f,0.7f,0.7f,
+                0.5f,0.8f,0f,      0f,0f,1f,
 
-                0.6f,-0.9f,     0.7f,0.7f,0.7f,
-                0.5f,-0.8f,     0f,0f,0f,
+                0.6f,-0.9f,-0.2f,     0.7f,0.7f,0.7f,
+                0.5f,-0.8f,0f,     0f,0f,0f,
         };
 
         vertexData = ByteBuffer
