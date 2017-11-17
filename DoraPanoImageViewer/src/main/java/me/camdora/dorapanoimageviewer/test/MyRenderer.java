@@ -14,6 +14,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import me.camdora.dorapanoimageviewer.R;
+import me.camdora.dorapanoimageviewer.data.VertexArray;
 import me.camdora.dorapanoimageviewer.utils.MatrixHelper;
 import me.camdora.dorapanoimageviewer.utils.ShaderHelper;
 import me.camdora.dorapanoimageviewer.utils.TextResourceReader;
@@ -43,7 +44,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
             (POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT) *
                     BYTES_PER_FLOAT;
 
-    private final FloatBuffer vertexData;
+    private final VertexArray vertexArray;
     private final Context context;
     private int program;
 
@@ -81,11 +82,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
                 0.5f,-0.8f,0f,     0f,0f,0f,
         };
 
-        vertexData = ByteBuffer
-                .allocateDirect(tableVertices.length * BYTES_PER_FLOAT)
-                .order(ByteOrder.nativeOrder())
-                .asFloatBuffer();
-        vertexData.put(tableVertices);
+        vertexArray = new VertexArray(tableVertices);
     }
 
     @Override
@@ -106,15 +103,13 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         aPositionLocation = glGetAttribLocation(program, A_POSITION);
         uMatrixLocation = glGetUniformLocation(program, U_MATRIX);
 
-        vertexData.position(0);
-        glVertexAttribPointer(aPositionLocation, POSITION_COMPONENT_COUNT,
-                GL_FLOAT, false, STRIDE, vertexData);
-        glEnableVertexAttribArray(aPositionLocation);
+        vertexArray.setVertexAttribPointer(0,
+                aPositionLocation,
+                POSITION_COMPONENT_COUNT,STRIDE);
 
-        vertexData.position(POSITION_COMPONENT_COUNT);
-        glVertexAttribPointer(aColorLocation, COLOR_COMPONENT_COUNT,
-                GL_FLOAT, false, STRIDE, vertexData);
-        glEnableVertexAttribArray(aColorLocation);
+        vertexArray.setVertexAttribPointer(POSITION_COMPONENT_COUNT,
+                aColorLocation,
+                COLOR_COMPONENT_COUNT,STRIDE);
     }
 
     @Override
