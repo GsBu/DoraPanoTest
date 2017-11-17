@@ -18,6 +18,7 @@ public class Table {
             * BYTES_PER_FLOAT;
 
     private static final float[] VERTEX_DATA = {
+            //x     y       s       t
             0f,     0f,     0.5f,   0.5f,
             -0.5f,  -0.8f,  0f,     0.9f,
             0.5f,   -0.8f,  1f,     0.9f,

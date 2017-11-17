@@ -15,10 +15,14 @@ import javax.microedition.khronos.opengles.GL10;
 
 import me.camdora.dorapanoimageviewer.R;
 import me.camdora.dorapanoimageviewer.data.VertexArray;
+import me.camdora.dorapanoimageviewer.objects.Mallet;
+import me.camdora.dorapanoimageviewer.objects.Table;
 import me.camdora.dorapanoimageviewer.programs.ColorShaderProgram;
+import me.camdora.dorapanoimageviewer.programs.TextureShaderProgram;
 import me.camdora.dorapanoimageviewer.utils.MatrixHelper;
 import me.camdora.dorapanoimageviewer.utils.ShaderHelper;
 import me.camdora.dorapanoimageviewer.utils.TextResourceReader;
+import me.camdora.dorapanoimageviewer.utils.TextureHelper;
 
 import static me.camdora.dorapanoimageviewer.utils.AppConstants.*;
 
@@ -49,7 +53,13 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     private final Context context;
     private int program;
 
+    private Table table;
+    private Mallet mallet;
+
+    private TextureShaderProgram textureShaderProgram;
     private ColorShaderProgram colorShaderProgram;
+
+    private int texture;
 
     public MyRenderer(Context context){
         this.context = context;
@@ -64,25 +74,25 @@ public class MyRenderer implements GLSurfaceView.Renderer{
                 -0.6f,-0.9f,-0.2f,    0.5f,0.5f,0.5f,
 
                 //第二个三角形
-                0f,0f,0f,          1f,1f,1f,
-                -0.5f,-0.8f,0f,    0.7f,0.7f,0.7f,
-                0.5f,-0.8f,0f,     0.7f,0.7f,0.7f,
-                0.5f,0.8f,0f,      0.7f,0.7f,0.7f,
-                -0.5f,0.8f,0f,     0.7f,0.7f,0.7f,
-                -0.5f,-0.8f,0f,    0.7f,0.7f,0.7f,
+                0f,0f,-0.1f,          1f,1f,1f,
+                -0.5f,-0.8f,-0.1f,    0.7f,0.7f,0.7f,
+                0.5f,-0.8f,-0.1f,     0.7f,0.7f,0.7f,
+                0.5f,0.8f,-0.1f,      0.7f,0.7f,0.7f,
+                -0.5f,0.8f,-0.1f,     0.7f,0.7f,0.7f,
+                -0.5f,-0.8f,-0.1f,    0.7f,0.7f,0.7f,
 
                 //连接线
                 -0.6f,-0.9f,-0.2f,    0.7f,0.7f,0.7f,
-                -0.5f,-0.8f,0f,    1f,0f,0f,
+                -0.5f,-0.8f,-0.1f,    1f,0f,0f,
 
                 -0.6f,0.9f,-0.2f,     0.7f,0.7f,0.7f,
-                -0.5f,0.8f,0f,     0f,1f,0f,
+                -0.5f,0.8f,-0.1f,     0f,1f,0f,
 
                 0.6f,0.9f,-0.2f,      0.7f,0.7f,0.7f,
-                0.5f,0.8f,0f,      0f,0f,1f,
+                0.5f,0.8f,-0.1f,      0f,0f,1f,
 
                 0.6f,-0.9f,-0.2f,     0.7f,0.7f,0.7f,
-                0.5f,-0.8f,0f,     0f,0f,0f,
+                0.5f,-0.8f,-0.1f,     0f,0f,0f,
         };
 
         vertexArray = new VertexArray(tableVertices);
@@ -91,6 +101,8 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        table = new Table();
+        mallet = new Mallet();
 
         /*String vertexShaderSource = TextResourceReader
                 .readTextFileFromResource(context, R.raw.vertex_shader_simple);
@@ -103,6 +115,11 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         program = ShaderHelper.linkProgram(vertexShader, fragmentShader);*/
         //替换成
         colorShaderProgram = new ColorShaderProgram(context);
+        textureShaderProgram = new TextureShaderProgram(context);
+
+        //加载纹理
+        texture = TextureHelper
+                .loadTexture(context, R.drawable.images);
 
         //glUseProgram(program);
         //替换成
@@ -159,6 +176,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
     public void onDrawFrame(GL10 gl) {
         glClear(GL_COLOR_BUFFER_BIT);
 
+
         //glUniformMatrix4fv(uMatrixLocation, 1, false, projectionMatrix, 0);
         //替换成
         colorShaderProgram.setUniforms(projectionMatrix);
@@ -175,5 +193,15 @@ public class MyRenderer implements GLSurfaceView.Renderer{
         glDrawArrays(GL_LINES, 16, 2);
         glDrawArrays(GL_LINES, 18, 2);
 
+
+        textureShaderProgram.useProgram();
+        textureShaderProgram.setUniforms(projectionMatrix, texture);
+        table.bindData(textureShaderProgram);
+        table.draw();
+
+        colorShaderProgram.useProgram();
+        colorShaderProgram.setUniforms(projectionMatrix);
+        mallet.bindData(colorShaderProgram);
+        mallet.draw();
     }
 }
