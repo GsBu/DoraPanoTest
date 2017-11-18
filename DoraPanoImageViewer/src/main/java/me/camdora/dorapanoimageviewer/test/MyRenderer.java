@@ -119,7 +119,7 @@ public class MyRenderer implements GLSurfaceView.Renderer{
 
         //加载纹理
         texture = TextureHelper
-                .loadTexture(context, R.drawable.images);
+                .loadTexture(context, R.drawable.test);
 
         //glUseProgram(program);
         //替换成
